@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Ensias shop</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/common.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/layui/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/layui/layui.js}"></script>
+</head>
+<body class="site-home">
+
+<div th:replace="mall/common::head"></div>
+<div class="layui-container" id="content">
+
+    <div class="layui-row">
+        <div class="layui-col-md12"><h1 class="site-h1"><i class="fa fa-gift" style="color: #FF5722;"></i>
+            &nbsp;mon panier</h1></div>
+    </div>
+    <div class="layui-row" style="text-align: center;">
+        <div class="layui-row" id="product_cart" style="overflow-x: auto;">
+            <div class="layui-col-md12">
+                <table class="layui-table" lay-skin="nob" id="cart">
+                </table>
+            </div>
+        </div>
+        <div class="layui-row" id="order_form">
+            <div class="layui-col-md5 layui-col-sm5 layui-col-xs12 layui-col-md-offset7">
+                <form class="layui-form" action="../order/submit.do">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Destinataire：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" required="required" lay-verify="required"
+                                   placeholder="Veuillez saisir le destinataire"
+                                   autocomplete="off" class="layui-input"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">téléphoner：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="phone" required="required" lay-verify="required"
+                                   placeholder="Veuillez saisir le numéro de téléphone du destinataire"
+                                   autocomplete="off" class="layui-input"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">adresse：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="addr" required="required" lay-verify="required"
+                                   placeholder="Veuillez saisir l'adresse du destinataire"
+                                   autocomplete="off" class="layui-input"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="text-align: right;">
+                            <span id="total" class="price1"></span>&emsp;
+                            <button class="layui-btn layui-btn-lg layui-btn-radius layui-btn-danger"
+                                    lay-submit="lay-submit" lay-filter="formDemo">Soumettre des commandes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        //            <![CDATA[
+        $(function () {
+
+            loadCart();
+        });
+
+        layui.use('form', function () {
+            var form = layui.form;
+        });
+
+        function loadCart() {
+            $.get("listCart.do", function (data) {
+                if (data.state == 0) {
+                    var table = $("#cart");
+                    if (data.data.length <= 0) {
+                        layer.msg("panier vide, faire des commandes！");
+                        $("#order_form").fadeOut();
+                        return;
+                    }
+                    appendToPage(table, data.data);
+                } else {
+                    layer.msg(data.message);
+                }
+            });
+        }
+
+        var total = 0;
+
+        function appendToPage(table, items) {
+
+            $(items).each(function (index, item) {
+                var tr = $("<tr style='max-height: 200px;'></tr>");
+                tr.append($("<td style=''><img class='img_responsive' src='" + item.product.image + "'/></td>"));
+                tr.append($("<td style='text-align: left;width: 180px;'>" + item.product.title + "</td>"));
+                tr.append($("<td>prix：" + item.product.shopPrice + "</td>"));
+                tr.append($("<td>quantite：" + item.count + "</td>"));
+                tr.append($("<td>total：dhs" + item.subTotal + "</td>"));
+                tr.append($("<td><button onclick='remove(this," + item.product.id + "," + item.subTotal + ")' class='layui-btn layui-btn-radius layui-btn-danger'>effacer</button></td>"));
+                table.append(tr);
+                total += item.subTotal;
+            });
+            $("#total").html("Prix total :" + total + " dhs");
+        }
+
+
+        function remove(btn, productId, subTotal) {
+            $.get("delCart.do?productId=" + productId, function (data) {
+                if (data.state == 0) {
+                    layer.msg("supprimé avec succès");
+                    $(btn).parent().parent().fadeOut();
+                    total -= subTotal;
+                    $("#total").html("total" + total + "dhs");
+                } else {
+                    layer.msg(data.message);
+                }
+            })
+        }
+
+
+        //            ]]>
+    </script>
+</div>
+
+<div th:replace="mall/common::foot"></div>
+</body>
+</html>

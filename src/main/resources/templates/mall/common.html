@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+
+<div class="layui-header header" th:fragment="head">
+    <script>
+        var layer;
+        layui.use(["layer","element"],function () {
+            layer = layui.layer;
+        });
+
+    </script>
+    <div class="layui-main">
+        <a class="logo" href="/mall/index.html">
+            <img th:src="@{/image/logo.png}"/>
+        </a>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item" style="color:#393D49;">
+                <a href="javascript:;">categorie</a>
+                <dl class="layui-nav-child" id="category">
+
+                </dl>
+                <script>
+                    //                    <![CDATA[
+                    //加载分类
+                    $.get("/mall/admin/classification/list.do?type=1&pageindex=-1", function (data) {
+                        if (data.state == 0) {
+                            var list = $("#category");
+                            $(data.data).each(function (index, item) {
+                                var cat = $("<dd><a href='/mall/product/category.html?cid="+item.id+"'>" + item.cname + "</a></dd>");
+                                list.append(cat);
+                            })
+                        } else {
+                            alert(data.message);
+                        }
+                    });
+                    //                    ]]>
+                </script>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <i class="fa fa-user-circle"></i>&nbsp;
+                    <span th:if="${session.user == null}">se connecter</span>
+                    <span th:if="${session.user != null}" th:text="'Bienvenue!&nbsp;' + ${session.user.username}">se connecter</span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd th:if="${session.user != null}"><a href="/mall/user/logout.do"><i class="fa fa-sign-out"></i> se deconnecter</a></dd>
+                    <dd th:if="${session.user != null}"><a href="/mall/order/toList.html"><i class="fa fa-list"></i> liste commandes</a></dd>
+                    <dd th:if="${session.user != null}"><a href="/mall/product/toCart.html"><i class="fa fa-shopping-cart"></i> panier</a></dd>
+                    <dd th:if="${session.user == null}"><a href="/mall/user/toLogin.html"><i class="fa fa-sign-in"></i> login</a></dd>
+                    <dd th:if="${session.user == null}"><a href="/mall/admin/toLogin.html"><i class="fa fa-sign-in"></i> admin login</a></dd>
+                    <dd th:if="${session.user == null}"><a href="/mall/user/toRegister.html"><i class="fa fa-user-plus"></i>register</a></dd>
+
+                </dl>
+            </li>
+            <!--<li class="layui-nav-item"><a href="">退了</a></li>-->
+        </ul>
+    </div>
+</div>
+
+
+
+</body>
+</html>
