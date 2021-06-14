@@ -1,18 +1,13 @@
 node{
   
-  agent any
-
-	environment{
-		mavenHome = tool 'MyMAVEN'
-	}
+  
   
   stage('Compile package'){
-    script {
-          withMaven(maven : 'MyMAVEN') {
-	     bat 'mvn --version'
-              bat 'mvn compile'
-	     }
-     }
+	     
+	     def mvnHome = tool name: 'maven-3', type: 'maven' 
+	     sh "${mvn}/bin/mvn --version"
+             sh '${mvn}/bin/mvn compile'
+     
     }
               
      
