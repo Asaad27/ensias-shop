@@ -4,10 +4,8 @@ node{
   git  'https://github.com/Asaad27/ensias-shop'
   }
   stage('Compile package'){
-	     cd ensias-shop
 	     bat 'mvn -v'
              bat 'mvn compile'
-
     }
               
      
