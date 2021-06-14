@@ -5,6 +5,9 @@ node{
   }
   
   stage('Compile package'){
-      sh 'mvn package'
+              steps { 
+               echo 'This is a minimal pipeline.' 
+           }
+     
   }
 }
