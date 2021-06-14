@@ -1,11 +1,14 @@
 node{
-  
-  
+  environment{
+  	mavenHome = tool 'MyMAVEN'
+  }
   
   stage('Compile package'){
 	     
+	     withMaven(maven : 'MyMAVEN') {
 	     bat 'mvn -v'
              bat 'mvn compile'
+	     }
     }
               
      
