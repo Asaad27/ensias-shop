@@ -1,7 +1,7 @@
 node{
 
   stage('git clone'){
-  git clone 'https://github.com/Asaad27/ensias-shop.git'
+  git  'https://github.com/Asaad27/ensias-shop'
   }
   stage('Compile package'){
 	     cd ensias-shop
