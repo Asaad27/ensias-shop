@@ -1,6 +1,8 @@
 node{
 
-  
+  stage('git clone'){
+  git  'https://github.com/Asaad27/ensias-shop'
+  }
   stage('Compile package'){
 	     
 	     bat 'mvn -v'
