@@ -1,0 +1,10 @@
+node{
+  
+  stage('SCM checkout'){
+      git 'https://github.com/Asaad27/ensias-shop.git'
+  }
+  
+  stage('Compile package'){
+      sh 'mvn package'
+  }
+}
