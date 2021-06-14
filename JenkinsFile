@@ -1,7 +1,7 @@
 node{
   
   stage('Compile package'){
-               echo 'This is a minimal pipeline.' 
+              bat 'mvn compile'
      
   }
 }
