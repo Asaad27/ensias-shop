@@ -3,20 +3,17 @@ node{
   agent any
 
 	environment{
-		dockerHome = tool 'MyDOCKER'
 		mavenHome = tool 'MyMAVEN'
-		PATH = "$dockerHome/bin:$PATH"
-		channelID = "G013KUVQ77G"
 	}
   
   stage('Compile package'){
     script {
           withMaven(maven : 'MyMAVEN') {
-					  	bat 'mvn --version'
+	     bat 'mvn --version'
               bat 'mvn compile'
-					}
+	     }
      }
+    }
               
      
-  }
 }
